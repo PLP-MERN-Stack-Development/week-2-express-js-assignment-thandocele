@@ -60,4 +60,84 @@ Your work will be automatically submitted when you push to your GitHub Classroom
 
 - [Express.js Documentation](https://expressjs.com/)
 - [RESTful API Design Best Practices](https://restfulapi.net/)
-- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) 
+- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+
+mkdir products-api
+cd products-api
+npm init -y
+npm install express morgan
+// index.js
+const express = require('express');
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Custom logging middleware
+app.use(require('./middleware/logger'));
+
+// Routes
+const productsRouter = require('./routes/products');
+app.use('/api/products', productsRouter);
+
+// Global error handler
+app.use(require('./middleware/errorHandler'));
+
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
+module.exports = (req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+  module.exports = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  if (authHeader && authHeader === 'Bearer mysecrettoken') {
+    next();
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+    module.exports = (req, res, next) => {
+  const { name, price } = req.body;
+  if (typeof name !== 'string' || name.trim() === '') {
+    return res.status(400).json({ message: 'Invalid or missing product name' });
+
+    CREATE a new product
+router.post('/', auth, validateProduct, (req, res, next) => {
+  try {
+    const newProduct = {
+      id: nextId++,
+      name: req.body.name,
+      price: req.body.price
+    };
+    products.push(newProduct);
+    res.status(201).json(newProduct);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// UPDATE a product
+router.put('/:id', auth, validateProduct, (req, res, next) => {
+  try {
+    const product = products.find(p => p.id === parseInt(req.params.id));
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    product.name = req.body.name;
+    product.price = req.body.price;
+    res.json(product);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE a product
+router.delete('/:id', auth, (req, res, next) => {
+  try {
+    const index = products.findIndex(p => p.id === parseInt(req.params.id));
+    if (index === -1) return res.status(404).json({ message: 'Product not found' });
+    products.splice(index, 1);
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
